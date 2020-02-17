@@ -5,19 +5,41 @@ using UnityEngine;
 public class HexCell : MonoBehaviour {
 
     [SerializeField]
-    HexCell[] neighbors;
+    private HexCell[] neighbors;
 
-    public HexCoordinates coordinates;
-    public Color color;
+    private HexCoordinates _coordinates;
+    public HexCoordinates Coordinates {
+        get { return _coordinates; }
+        set {
+            _coordinates = value;
+            gameObject.name = GetType().Name + " " + this;
+        }
+    }
+    public HexGridChunk chunk;
     public RectTransform uiRect;
 
-    private int elevation;
-    public int Elevation {
+    private Color _color;
+    public Color Color {
         get {
-            return elevation;
+            return _color;
         }
         set {
-            elevation = value;
+            if (_color == value) return;
+
+            _color = value;
+            Refresh();
+        }
+    }
+
+    private int _elevation = int.MinValue;
+    public int Elevation {
+        get {
+            return _elevation;
+        }
+        set {
+            if (_elevation == value) return;
+
+            _elevation = value;
             Vector3 position = transform.position;
             position.y = value * HexMetrics.elevationStep;
             position.y += 
@@ -29,6 +51,8 @@ public class HexCell : MonoBehaviour {
             Vector3 uiPosition = uiRect.localPosition;
             uiPosition.z = -position.y;
             uiRect.localPosition = uiPosition;
+
+            Refresh();
         }
     }
 
@@ -46,10 +70,27 @@ public class HexCell : MonoBehaviour {
     }
 
     public HexEdgeType GetEdgeType(HexDirection direction) {
-        return HexMetrics.GetEdgeType(elevation, GetNeighbor(direction).elevation);
+        return HexMetrics.GetEdgeType(_elevation, GetNeighbor(direction)._elevation);
     }
 
     public HexEdgeType GetEdgeType(HexCell otherCell) {
-        return HexMetrics.GetEdgeType(elevation, otherCell.elevation);
+        return HexMetrics.GetEdgeType(_elevation, otherCell._elevation);
+    }
+
+    public void Refresh() {
+        if (!chunk) return;
+    
+        chunk.Refresh();
+
+        foreach (var neighbor in neighbors) {
+            if (!neighbor) continue;
+            if (neighbor.chunk != chunk) {
+                neighbor.chunk.Refresh();
+            }
+        }
+    }
+
+    public override string ToString() {
+        return "(" + Coordinates.X + ", " + Coordinates.Z + ")";
     }
 }

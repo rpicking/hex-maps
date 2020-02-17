@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [System.Serializable]
 public struct HexCoordinates {
@@ -63,7 +63,7 @@ public struct HexCoordinates {
         return "(" + X.ToString() + ", " + Y.ToString() + ", " + Z.ToString() + ")";
     }
 
-    public string ToSTringOnSeparateLine() {
+    public string ToStringOnSeparateLine() {
         return X.ToString() + "\n" + Y.ToString() + "\n" + Z.ToString();
     }
 }
