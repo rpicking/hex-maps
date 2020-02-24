@@ -60,6 +60,12 @@ public class HexCell : MonoBehaviour {
                 RemoveIncomingRiver();
             }
 
+            for (int i = 0; i < roads.Length; ++i) {
+                if (roads[i] && GetElevationDifference((HexDirection)i) > 1) {
+                    SetRoad(i, false);
+                }
+            }
+
             Refresh();
         }
     }
@@ -69,8 +75,13 @@ public class HexCell : MonoBehaviour {
     }
 
     [Header("Rivers")]
-    [SerializeField]
-    private bool _hasIncomingRiver, _hasOutgoingRiver;
+    [SerializeField] private bool _hasIncomingRiver, _hasOutgoingRiver;
+    [SerializeField] HexDirection _incomingRiver, _outgoingRiver;
+
+    [Space]
+    [SerializeField] private bool[] roads;
+    [SerializeField] private HexCell[] neighbors;
+
     public bool HasIncomingRiver {
         get { return _hasIncomingRiver; }
     }
@@ -79,12 +90,11 @@ public class HexCell : MonoBehaviour {
         get { return _hasOutgoingRiver; }
     }
 
-    [SerializeField]
-    HexDirection _incomingRiver, _outgoingRiver;
     public HexDirection IncomingRiver {
         get { return _incomingRiver; }
     }
-    public HexDirection OutGoingRiver {
+
+    public HexDirection OutgoingRiver {
         get { return _outgoingRiver; }
     }
 
@@ -97,6 +107,12 @@ public class HexCell : MonoBehaviour {
     public bool HasRiverBeginOrEnd {
         get {
             return _hasIncomingRiver != _hasOutgoingRiver;
+        }
+    }
+
+    public HexDirection RiverBeginOrEndDirection {
+        get {
+            return _hasIncomingRiver ? _incomingRiver : _outgoingRiver;
         }
     }
 
@@ -114,9 +130,16 @@ public class HexCell : MonoBehaviour {
         }
     }
 
-    [SerializeField]
-    private HexCell[] neighbors;
-
+    public bool HasRoads {
+        get {
+            for (int i = 0; i < roads.Length; ++i) {
+                if (roads[i]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 
     public HexCell GetNeighbor(HexDirection direction) {
         return neighbors[(int)direction];
@@ -174,13 +197,14 @@ public class HexCell : MonoBehaviour {
         // set the new outgoing river
         _hasOutgoingRiver = true;
         _outgoingRiver = direction;
-        Refresh(true);
 
         // set the new incoming river for the neighboring cell
         neighbor.RemoveIncomingRiver();
         neighbor._hasIncomingRiver = true;
         neighbor._incomingRiver = direction.Opposite();
-        neighbor.Refresh(true);
+
+        // cannot have roads going in the same direction as the river
+        SetRoad(direction, false);
     }
 
     public void RemoveRiver() {
@@ -209,6 +233,41 @@ public class HexCell : MonoBehaviour {
         HexCell neighbor = GetNeighbor(_incomingRiver);
         neighbor._hasOutgoingRiver = false;
         neighbor.Refresh(true);
+    }
+
+    public bool HasRoadThroughEdge(HexDirection direction) {
+        return roads[(int)direction];
+    }
+
+    public void AddRoad(HexDirection direction) {
+        if (!roads[(int)direction] && !HasRiverThroughEdge(direction) &&
+            GetElevationDifference(direction) <= 1) {
+            SetRoad((int)direction, true);
+        }
+    }
+
+    public void RemoveRoads() {
+        for (int i = 0; i < neighbors.Length; ++i) {
+            if (!roads[i]) continue;
+
+            SetRoad(i, false);
+        }
+    }
+
+    private void SetRoad(HexDirection direction, bool state) {
+        SetRoad((int)direction, state);
+    }
+
+    private void SetRoad(int index, bool state) {
+        roads[index] = state;
+        neighbors[index].roads[(int)((HexDirection)index).Opposite()] = state;
+        neighbors[index].Refresh(true);
+        Refresh(true);
+    }
+
+    public int GetElevationDifference(HexDirection direction) {
+        int difference = _elevation - GetNeighbor(direction)._elevation;
+        return difference >= 0 ? difference : -difference;
     }
 
     public override string ToString() {

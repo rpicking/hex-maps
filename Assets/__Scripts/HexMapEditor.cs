@@ -18,7 +18,8 @@ public class HexMapEditor : MonoBehaviour {
 
     private bool applyColor = false;
     private bool applyElevation = true;
-    private OptionalToggle riverMode;
+
+    private OptionalToggle riverMode, roadMode;
 
     private bool isDrag;
     private HexDirection dragDirection;
@@ -27,6 +28,7 @@ public class HexMapEditor : MonoBehaviour {
     private void Awake() {
         SelectColor(0);
         SetRiverMode(0);
+        SetRoadMode(0);
     }
 
     private void Update() {
@@ -92,6 +94,10 @@ public class HexMapEditor : MonoBehaviour {
         riverMode = (OptionalToggle)mode;
     }
 
+    public void SetRoadMode(int mode) {
+        roadMode = (OptionalToggle)mode;
+    }
+
     private void EditCells(HexCell center) {
         int centerX = center.Coordinates.X;
         int centerZ = center.Coordinates.Z;
@@ -120,13 +126,18 @@ public class HexMapEditor : MonoBehaviour {
             cell.Elevation = activeElevation;
         }
 
-        if (riverMode == OptionalToggle.NO) {
-            cell.RemoveRiver();
-        } else if (isDrag && riverMode == OptionalToggle.YES) {
-            HexCell other = cell.GetNeighbor(dragDirection.Opposite());
-
-            if (other) {
-                other.SetOutgoingRiver(dragDirection);
+        if (roadMode == OptionalToggle.NO) {
+            cell.RemoveRoads();
+        }
+        if (isDrag) {
+            HexCell otherCell = cell.GetNeighbor(dragDirection.Opposite());
+            if (otherCell) {
+                if (riverMode == OptionalToggle.YES) {
+                    otherCell.SetOutgoingRiver(dragDirection);
+                }
+                if (roadMode == OptionalToggle.YES) {
+                    otherCell.AddRoad(dragDirection);
+                }
             }
         }
     }
