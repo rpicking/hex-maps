@@ -49,16 +49,7 @@ public class HexCell : MonoBehaviour {
             uiPosition.z = -position.y;
             uiRect.localPosition = uiPosition;
 
-            // update river if new elevation causes river to not be able to flow anymore
-            if (_hasOutgoingRiver &&
-            _elevation < GetNeighbor(_outgoingRiver)._elevation) {
-                RemoveOutgoingRiver();
-            }
-
-            if (_hasIncomingRiver &&
-                _elevation > GetNeighbor(_incomingRiver)._elevation) {
-                RemoveIncomingRiver();
-            }
+            ValidateRivers();
 
             for (int i = 0; i < roads.Length; ++i) {
                 if (roads[i] && GetElevationDifference((HexDirection)i) > 1) {
@@ -125,7 +116,7 @@ public class HexCell : MonoBehaviour {
 
     public float RiverSurfaceY {
         get {
-            return (_elevation + HexMetrics.riverSurfaceElevationOffset) *
+            return (_elevation + HexMetrics.waterElevationOffset) *
                 HexMetrics.elevationStep;
         }
     }
@@ -139,6 +130,31 @@ public class HexCell : MonoBehaviour {
             }
             return false;
         }
+    }
+
+    private int waterLevel;
+    public int WaterLevel {
+        get { return waterLevel; }
+        set {
+            if (waterLevel == value) {
+                return;
+            }
+
+            waterLevel = value;
+            ValidateRivers();
+            Refresh();
+        }
+    }
+
+    public float WaterSurfaceY {
+        get {
+            return (waterLevel + HexMetrics.waterElevationOffset) *
+              HexMetrics.elevationStep; 
+        }
+    }
+
+    public bool IsUnderwater {
+        get { return waterLevel > _elevation; }
     }
 
     public HexCell GetNeighbor(HexDirection direction) {
@@ -185,7 +201,7 @@ public class HexCell : MonoBehaviour {
         }
 
         HexCell neighbor = GetNeighbor(direction);
-        if (!neighbor || (_elevation < neighbor._elevation)) {
+        if (!IsValidRiverDestination(neighbor)) {
             return;
         }
 
@@ -268,6 +284,22 @@ public class HexCell : MonoBehaviour {
     public int GetElevationDifference(HexDirection direction) {
         int difference = _elevation - GetNeighbor(direction)._elevation;
         return difference >= 0 ? difference : -difference;
+    }
+
+    private bool IsValidRiverDestination(HexCell neighbor) {
+        return neighbor && (
+            _elevation >= neighbor._elevation || waterLevel == neighbor._elevation);
+    }
+
+    private void ValidateRivers() {
+        if (_hasOutgoingRiver &&
+            !IsValidRiverDestination(GetNeighbor(_outgoingRiver))) {
+            RemoveOutgoingRiver();
+        }
+        if (_hasIncomingRiver &&
+            !GetNeighbor(_incomingRiver).IsValidRiverDestination(this)) {
+            RemoveIncomingRiver();
+        }
     }
 
     public override string ToString() {
