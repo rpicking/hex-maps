@@ -16,11 +16,15 @@ public class HexMapEditor : MonoBehaviour {
     private int activeElevation;
     private int activeWaterLevel;
 
+    private int activeUrbanLevel, activeFarmLevel, activePlantLevel;
+
     private int brushSize;
 
     private bool applyColor = false;
     private bool applyElevation = true;
     private bool applyWaterLevel = true;
+
+    private bool applyUrbanLevel, applyFarmLevel, applyPlantLevel;
 
     private OptionalToggle riverMode, roadMode;
 
@@ -109,6 +113,31 @@ public class HexMapEditor : MonoBehaviour {
         activeWaterLevel = (int)level;
     }
 
+    public void SetApplyUrbanLevel(bool toggle) {
+        applyUrbanLevel = toggle;
+    }
+
+    public void SetUrbanLevel(float level) {
+        activeUrbanLevel = (int)level;
+    }
+
+    public void SetApplyFarmLevel(bool toggle) {
+        applyFarmLevel = toggle;
+    }
+
+    public void SetFarmLevel(float level) {
+        activeFarmLevel = (int)level;
+    }
+
+    public void SetApplyPlantLevel(bool toggle) {
+        applyPlantLevel = toggle;
+    }
+
+    public void SetPlantLevel(float level) {
+        activePlantLevel = (int)level;
+    }
+
+
     private void EditCells(HexCell center) {
         int centerX = center.Coordinates.X;
         int centerZ = center.Coordinates.Z;
@@ -132,6 +161,7 @@ public class HexMapEditor : MonoBehaviour {
         if (applyColor) {
             cell.Color = activeColor;
         }
+        // natural features
         if (applyElevation) {
             cell.Elevation = activeElevation;
         }
@@ -139,11 +169,21 @@ public class HexMapEditor : MonoBehaviour {
             cell.WaterLevel = activeWaterLevel;
         }
 
+        // cell features
+        if (applyUrbanLevel) {
+            cell.UrbanLevel = activeUrbanLevel;
+        }
+        if (applyFarmLevel) {
+            cell.FarmLevel = activeFarmLevel;
+        }
+        if (applyPlantLevel) {
+            cell.PlantLevel = activePlantLevel;
+        }
+
         if (roadMode == OptionalToggle.NO) {
             cell.RemoveRoads();
         }
-
-
+        
         if (isDrag) {
             HexCell otherCell = cell.GetNeighbor(dragDirection.Opposite());
             if (otherCell) {

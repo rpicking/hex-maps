@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1507846224215060192
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4900248816550225161}
+  - component: {fileID: 3012183755274916863}
+  m_Layer: 0
+  m_Name: Features
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4900248816550225161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507846224215060192}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3012183755274916863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507846224215060192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a391b44e0f9c31448ee87650f27c263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  urbanCollections:
+  - prefabs:
+    - {fileID: 308555070792726393, guid: bed2afcd3d3f0dd4dac82e6cbb62837d, type: 3}
+    - {fileID: 8632086062246074610, guid: 30a19417fb266df44891c019fd6bc695, type: 3}
+  - prefabs:
+    - {fileID: 273086502304453658, guid: 689f197588667ab4697e428aa9d44e8a, type: 3}
+    - {fileID: 9154190921694907785, guid: ccc103324e6cdc941bf0f2ece1d7dab3, type: 3}
+  - prefabs:
+    - {fileID: 1241723628004153706, guid: 155b9ea6a3926574aaf837887c41f86c, type: 3}
+    - {fileID: 7153993914478176362, guid: ea2e19c7d748d214ca46cfdbab953d1b, type: 3}
+  farmCollections:
+  - prefabs:
+    - {fileID: 1241723628004153706, guid: b263712a603bb95439cadc536fd5e46d, type: 3}
+    - {fileID: 1241723628004153706, guid: 53e875c87ecddc94ab7d85bd5e20c831, type: 3}
+  - prefabs:
+    - {fileID: 1241723628004153706, guid: 3ca2733a4bd617440b4460782f2cd495, type: 3}
+    - {fileID: 1241723628004153706, guid: 19b2fe058f2b6f84cbd593826df853d5, type: 3}
+  - prefabs:
+    - {fileID: 1241723628004153706, guid: ce757fc671ae7d242a8ea6b0feaf7862, type: 3}
+    - {fileID: 1241723628004153706, guid: 736ed686b585ab84dbe9ec3f0f4bc36c, type: 3}
+  plantCollections:
+  - prefabs:
+    - {fileID: 1241723628004153706, guid: 34efe60192e6c13478989533bc420454, type: 3}
+    - {fileID: 1241723628004153706, guid: 656ee9494496c0240acf6849538b04dc, type: 3}
+  - prefabs:
+    - {fileID: 1241723628004153706, guid: db52403f1cd7b6542bfb2c01b8ab521e, type: 3}
+    - {fileID: 1241723628004153706, guid: fd0ff77ee9e1b3240bb044157141ff0a, type: 3}
+  - prefabs:
+    - {fileID: 1241723628004153706, guid: 54e359f633374d242b0b2dce9de6b9e6, type: 3}
+    - {fileID: 1241723628004153706, guid: 1119c371f5ec06e43ba33f3bd5b56d9e, type: 3}

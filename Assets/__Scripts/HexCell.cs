@@ -156,6 +156,45 @@ public class HexCell : MonoBehaviour {
     public bool IsUnderwater {
         get { return waterLevel > _elevation; }
     }
+    
+    public int UrbanLevel {
+        get {
+            return urbanLevel;
+        }
+        set {
+            if (urbanLevel != value) {
+                urbanLevel = value;
+                Refresh(true);
+            }
+        }
+    }
+    public int FarmLevel {
+        get {
+            return farmLevel;
+        }
+        set {
+            if (farmLevel != value) {
+                farmLevel = value;
+                Refresh(true);
+            }
+        }
+    }
+
+    public int PlantLevel {
+        get {
+            return plantLevel;
+        }
+        set {
+            if (plantLevel != value) {
+                plantLevel = value;
+                Refresh(true);
+            }
+        }
+    }
+
+    private int urbanLevel, farmLevel, plantLevel;
+
+
 
     public HexCell GetNeighbor(HexDirection direction) {
         return neighbors[(int)direction];
