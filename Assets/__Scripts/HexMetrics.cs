@@ -51,6 +51,7 @@ public static class HexMetrics {
 
     public const float waterBlendFactor = 1f - waterFactor;
 
+    // features
     public const int hashGridSize = 256;
     public const float hashGridScale = 0.25f;
 
@@ -61,6 +62,12 @@ public static class HexMetrics {
         new float[] {0.0f, 0.4f, 0.6f},
         new float[] {0.4f, 0.6f, 0.8f}
     };
+
+    // walls
+    public const float wallHeight = 3f;
+    public const float wallThickness = 0.75f;
+    public const float wallElevationOffset = verticalTerraceStepSize;
+
 
 
     public static Vector4 SampleNoise (Vector3 position) {
@@ -168,5 +175,31 @@ public static class HexMetrics {
 
     public static float[] GetFeatureThresholds(int level) {
         return featureThresholds[level];
+    }
+
+    public static Vector3 WallThicknessOffset(Vector3 near, Vector3 far) {
+        Vector3 offset;
+        offset.x = far.x - near.x;
+        offset.y = 0f;
+        offset.z = far.z - near.z;
+
+        return offset.normalized * (wallThickness * 0.5f);
+    }
+
+    /// <summary>
+    /// lerp between the low and high point of a wall bottom
+    ///   used mainly for if the near and far points of a wall are not on the same left
+    ///   i.e. a terraced edge
+    /// </summary>
+    /// <param name="near"></param>
+    /// <param name="far"></param>
+    /// <returns></returns>
+    public static Vector3 WallLerp(Vector3 near, Vector3 far) {
+        near.x += (far.x - near.x) * 0.5f;
+        near.z += (far.z - near.z) * 0.5f;
+        float v =
+            near.y < far.y ? wallElevationOffset : (1f - wallElevationOffset);
+        near.y += (far.y - near.y) * v;
+        return near;
     }
 }

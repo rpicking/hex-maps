@@ -193,8 +193,19 @@ public class HexCell : MonoBehaviour {
     }
 
     private int urbanLevel, farmLevel, plantLevel;
-
-
+    
+    [SerializeField] private bool walled;
+    public bool Walled {
+        get {
+            return walled;
+        }
+        set {
+            if (walled != value) {
+                walled = value;
+                Refresh();
+            }
+        }
+    }
 
     public HexCell GetNeighbor(HexDirection direction) {
         return neighbors[(int)direction];
