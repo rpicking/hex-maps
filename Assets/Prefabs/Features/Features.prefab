@@ -73,3 +73,8 @@ MonoBehaviour:
   - prefabs:
     - {fileID: 1241723628004153706, guid: 54e359f633374d242b0b2dce9de6b9e6, type: 3}
     - {fileID: 1241723628004153706, guid: 1119c371f5ec06e43ba33f3bd5b56d9e, type: 3}
+  walls: {fileID: 0}
+  wallTowerPrefab: {fileID: 199578425613448088, guid: f2481a7e8d4fdef49abe221892393140,
+    type: 3}
+  bridgePrefab: {fileID: 6538771693369786556, guid: 6310f0c5935e9da4381166e6222dc29a,
+    type: 3}

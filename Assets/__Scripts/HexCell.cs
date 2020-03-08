@@ -207,6 +207,26 @@ public class HexCell : MonoBehaviour {
         }
     }
 
+    private int specialIndex;
+    public int SpecialIndex {
+        get {
+            return specialIndex;
+        }
+        set {
+            if (specialIndex != value && !HasRiver) {
+                specialIndex = value;
+                RemoveRoads();
+                Refresh(true);
+            }
+        }
+    }
+
+    public bool IsSpecial {
+        get {
+            return specialIndex > 0;
+        }
+    }
+
     public HexCell GetNeighbor(HexDirection direction) {
         return neighbors[(int)direction];
     }
@@ -263,11 +283,13 @@ public class HexCell : MonoBehaviour {
         // set the new outgoing river
         _hasOutgoingRiver = true;
         _outgoingRiver = direction;
+        specialIndex = 0;
 
         // set the new incoming river for the neighboring cell
         neighbor.RemoveIncomingRiver();
         neighbor._hasIncomingRiver = true;
         neighbor._incomingRiver = direction.Opposite();
+        neighbor.specialIndex = 0;
 
         // cannot have roads going in the same direction as the river
         SetRoad(direction, false);
@@ -307,6 +329,7 @@ public class HexCell : MonoBehaviour {
 
     public void AddRoad(HexDirection direction) {
         if (!roads[(int)direction] && !HasRiverThroughEdge(direction) &&
+            !IsSpecial && !GetNeighbor(direction).IsSpecial &&
             GetElevationDifference(direction) <= 1) {
             SetRoad((int)direction, true);
         }
